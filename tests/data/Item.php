@@ -18,7 +18,7 @@ class Item extends ActiveRecord
     public function behaviors()
     {
         return [
-            'softDeleteBehavior' => [
+            'positionBehavior' => [
                 'class' => PositionBehavior::className(),
             ],
         ];

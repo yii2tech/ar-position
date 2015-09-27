@@ -19,7 +19,7 @@ class GroupItem extends ActiveRecord
     public function behaviors()
     {
         return [
-            'softDeleteBehavior' => [
+            'positionBehavior' => [
                 'class' => PositionBehavior::className(),
                 'groupAttributes' => [
                     'groupId'

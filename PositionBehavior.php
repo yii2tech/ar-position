@@ -16,6 +16,21 @@ use yii\db\BaseActiveRecord;
  * Behavior uses the specific integer field of the database entity to set up position index.
  * Due to this the database entity, which the model refers to, must contain field [[positionAttribute]].
  *
+ * ```php
+ * class Item extends ActiveRecord
+ * {
+ *     public function behaviors()
+ *     {
+ *         return [
+ *             'positionBehavior' => [
+ *                 'class' => PositionBehavior::className(),
+ *                 'positionAttribute' => 'position',
+ *             ],
+ *         ];
+ *     }
+ * }
+ * ```
+ *
  * @property BaseActiveRecord $owner owner ActiveRecord instance.
  *
  * @author Paul Klimov <klimov.paul@gmail.com>

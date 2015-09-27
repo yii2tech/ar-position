@@ -63,7 +63,7 @@ class PositionBehaviorGroupTest extends TestCase
         /* @var $refreshedNextRecord GroupItem|PositionBehavior */
 
         $groupId = 2;
-        $currentPosition = 5;
+        $currentPosition = 3;
         $currentRecord = GroupItem::findOne(['groupId' => $groupId, 'position' => $currentPosition]);
         $nextRecord = GroupItem::findOne(['groupId' => $groupId, 'position' => $currentPosition + 1]);
 
@@ -192,7 +192,7 @@ class PositionBehaviorGroupTest extends TestCase
     }
 
     /**
-     * @depends testSave
+     * @depends testUpdate
      */
     public function testMoveBetweenGroups()
     {

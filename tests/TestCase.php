@@ -76,5 +76,37 @@ class TestCase extends \PHPUnit_Framework_TestCase
             'position' => 'integer',
         ];
         $db->createCommand()->createTable($table, $columns)->execute();
+
+        $table = 'GroupItem';
+        $columns = [
+            'id' => 'pk',
+            'name' => 'string',
+            'groupId' => 'integer',
+            'position' => 'integer',
+        ];
+        $db->createCommand()->createTable($table, $columns)->execute();
+
+        // Data :
+
+        $db->createCommand()->batchInsert('Item', ['name', 'position'], [
+            ['item1', 1],
+            ['item2', 2],
+            ['item2', 3],
+            ['item2', 4],
+            ['item2', 5],
+        ])->execute();
+
+        $db->createCommand()->batchInsert('GroupItem', ['name', 'groupId', 'position'], [
+            ['item1', 1, 1],
+            ['item1', 2, 1],
+            ['item2', 1, 2],
+            ['item2', 2, 2],
+            ['item2', 1, 3],
+            ['item2', 2, 3],
+            ['item2', 1, 4],
+            ['item2', 2, 4],
+            ['item2', 1, 5],
+            ['item2', 2, 5],
+        ])->execute();
     }
 }

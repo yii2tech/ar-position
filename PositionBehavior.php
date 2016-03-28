@@ -253,7 +253,7 @@ class PositionBehavior extends Behavior
         $condition = [];
         if (!empty($this->groupAttributes)) {
             foreach ($this->groupAttributes as $attribute) {
-                $condition[$attribute] = $this->owner->$attribute;
+                $condition[$attribute] = empty($this->owner->$attribute)?null:$this->owner->$attribute;
             }
         }
         return $condition;

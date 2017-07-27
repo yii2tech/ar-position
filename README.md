@@ -1,5 +1,10 @@
-ActiveRecord Position Extension for Yii2
-========================================
+<p align="center">
+    <a href="https://github.com/yii2tech" target="_blank">
+        <img src="https://avatars2.githubusercontent.com/u/12951949" height="100px">
+    </a>
+    <h1 align="center">ActiveRecord Position Extension for Yii2</h1>
+    <br>
+</p>
 
 This extension provides support for ActiveRecord custom records order setup.
 
@@ -117,7 +122,7 @@ $item->save();
 
 Sometimes single database entity contains several listings, which require custom ordering, separated logically
 by grouping attributes. For example: FAQ questions may be grouped by categories, while inside single category
-questions should be ordered manually. For this case [[\yii2tech\ar\position\PositionBehavior::groupAttributes]]
+questions should be ordered manually. For this case [[\yii2tech\ar\position\PositionBehavior::$groupAttributes]]
 can be used:
 
 ```php

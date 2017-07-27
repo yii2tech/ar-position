@@ -6,9 +6,9 @@ use yii\db\ActiveRecord;
 use yii2tech\ar\position\PositionBehavior;
 
 /**
- * @property integer $id
+ * @property int $id
  * @property string $name
- * @property boolean $position
+ * @property int $position
  */
 class Item extends ActiveRecord
 {

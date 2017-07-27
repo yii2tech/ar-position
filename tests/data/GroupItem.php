@@ -6,10 +6,10 @@ use yii\db\ActiveRecord;
 use yii2tech\ar\position\PositionBehavior;
 
 /**
- * @property integer $id
+ * @property int $id
  * @property string $name
  * @property string $groupId
- * @property boolean $position
+ * @property int $position
  */
 class GroupItem extends ActiveRecord
 {

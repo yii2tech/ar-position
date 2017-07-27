@@ -51,7 +51,7 @@ class PositionBehavior extends Behavior
     public $groupAttributes = [];
 
     /**
-     * @var integer position value, which should be applied to the model on its save.
+     * @var int position value, which should be applied to the model on its save.
      * Internal usage only.
      */
     private $positionOnSave;
@@ -59,7 +59,7 @@ class PositionBehavior extends Behavior
 
     /**
      * Moves owner record by one position towards the start of the list.
-     * @return boolean movement successful.
+     * @return bool movement successful.
      */
     public function movePrev()
     {
@@ -88,7 +88,7 @@ class PositionBehavior extends Behavior
 
     /**
      * Moves owner record by one position towards the end of the list.
-     * @return boolean movement successful.
+     * @return bool movement successful.
      */
     public function moveNext()
     {
@@ -117,7 +117,7 @@ class PositionBehavior extends Behavior
 
     /**
      * Moves owner record to the start of the list.
-     * @return boolean movement successful.
+     * @return bool movement successful.
      */
     public function moveFirst()
     {
@@ -146,7 +146,7 @@ class PositionBehavior extends Behavior
 
     /**
      * Moves owner record to the end of the list.
-     * @return boolean movement successful.
+     * @return bool movement successful.
      */
     public function moveLast()
     {
@@ -179,8 +179,8 @@ class PositionBehavior extends Behavior
      * Moves owner record to the specific position.
      * If specified position exceeds the total number of records,
      * owner will be moved to the end of the list.
-     * @param integer $position number of the new position.
-     * @return boolean movement successful.
+     * @param int $position number of the new position.
+     * @return bool movement successful.
      */
     public function moveToPosition($position)
     {
@@ -262,7 +262,7 @@ class PositionBehavior extends Behavior
     /**
      * Finds the number of records which belongs to the group of the owner.
      * @see groupAttributes
-     * @return integer records count.
+     * @return int records count.
      */
     protected function countGroupRecords()
     {

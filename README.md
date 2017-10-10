@@ -74,7 +74,7 @@ foreach ($records as $record) {
 
 ## Position saving <span id="position-saving"></span>
 
-Being attached behavior automatically fills up `positionAttribute` value fro the new record, plaing it to the end
+Being attached, behavior automatically fills up `positionAttribute` value fro the new record, placing it to the end
 of the list:
 
 ```php
@@ -86,7 +86,7 @@ $item->save();
 echo $item->position // outputs: 5
 ```
 
-However you may setup position for the new record explicitly:
+However, you may setup position for the new record explicitly:
 
 ```php
 echo Item::find()->count(); // outputs: 4
@@ -143,7 +143,7 @@ class FaqQuestion extends ActiveRecord
 }
 ```
 
-In this case behavior will use owner values of 'groupAttributes' as additional condition for position
+In this case behavior will use owner values of `groupAttributes` as additional condition for position
 calculation and changing:
 
 ```php

@@ -112,7 +112,7 @@ Existing record can be moved to another position using following methods:
 You may as well change record position through the attribute, provided to `positionAttribute` directly:
 
 ```php
-$item = Item::find()->andWhere(['position' => 3]);
+$item = Item::find()->andWhere(['position' => 3])->one();
 $item->position = 5; // switch position to '5'
 $item->save();
 ```
@@ -159,4 +159,50 @@ $record = new FaqQuestion();
 $record->categoryId = 2;
 $record->save();
 echo $record->position // outputs: '8'
+```
+
+
+## List navigation <span id="list-navigation"></span>
+
+Records with custom position order applied make a chained list, which you may navigate if necessary.
+You may use [[\yii2tech\ar\position\PositionBehavior::getIsFirst()]] and [[\yii2tech\ar\position\PositionBehavior::getIsLast()]]
+methods to determine if particular record is the first or last one in the list. For example:
+
+```php
+echo Item::find()->count(); // outputs: 10
+
+$firstItem = Item::find()->andWhere(['position' => 1])->one();
+echo $firstItem->getIsFirst(); // outputs: true
+echo $firstItem->getIsLast(); // outputs: false
+
+$lastItem = Item::find()->andWhere(['position' => 10])->one();
+echo $lastItem->getIsFirst(); // outputs: false
+echo $lastItem->getIsLast(); // outputs: true
+```
+
+Having a particular record instance, you can always find record, which is located at next or previous position to it,
+using [[\yii2tech\ar\position\PositionBehavior::getNext()]] or [[\yii2tech\ar\position\PositionBehavior::getPrev()]] method.
+For example:
+
+```php
+$item = Item::find()->andWhere(['position' => 5])->one();
+
+$nextItem = $item->findNext();
+echo $nextItem->position; // outputs: 6
+
+$prevItem = $item->findPrev();
+echo $prevItem->position; // outputs: 4
+```
+
+You may as well get the first and the last records in the list. For example:
+
+```php
+echo Item::find()->count(); // outputs: 10
+$item = Item::find()->andWhere(['position' => 5])->one();
+
+$firstItem = $item->findFirst();
+echo $firstItem->position; // outputs: 1
+
+$lastItem = $item->findLast();
+echo $lastItem->position; // outputs: 10
 ```

@@ -32,6 +32,8 @@ use yii\db\BaseActiveRecord;
  * ```
  *
  * @property BaseActiveRecord $owner owner ActiveRecord instance.
+ * @property bool $isFirst whether this record is the first in the list. This property is available since version 1.0.1.
+ * @property bool $isLast whether this record is the last in the list. This property is available since version 1.0.1.
  *
  * @author Paul Klimov <klimov.paul@gmail.com>
  * @since 1.0
@@ -216,31 +218,31 @@ class PositionBehavior extends Behavior
             ]);
 
             return true;
-        } else {
-            // Move Down:
-            $recordsCount = $this->countGroupRecords();
-            if ($position >= $recordsCount) {
-                return $this->moveLast();
-            }
-
-            $this->owner->updateAllCounters(
-                [
-                    $positionAttribute => -1
-                ],
-                [
-                    'and',
-                    $this->createGroupConditionAttributes(),
-                    ['>', $positionAttribute, $oldRecord->$positionAttribute],
-                    ['<=', $positionAttribute, $position],
-                ]
-            );
-
-            $this->owner->updateAttributes([
-                $positionAttribute => $position
-            ]);
-
-            return true;
         }
+
+        // Move Down:
+        $recordsCount = $this->countGroupRecords();
+        if ($position >= $recordsCount) {
+            return $this->moveLast();
+        }
+
+        $this->owner->updateAllCounters(
+            [
+                $positionAttribute => -1
+            ],
+            [
+                'and',
+                $this->createGroupConditionAttributes(),
+                ['>', $positionAttribute, $oldRecord->$positionAttribute],
+                ['<=', $positionAttribute, $position],
+            ]
+        );
+
+        $this->owner->updateAttributes([
+            $positionAttribute => $position
+        ]);
+
+        return true;
     }
 
     /**
@@ -271,6 +273,110 @@ class PositionBehavior extends Behavior
             $query->andWhere($this->createGroupConditionAttributes());
         }
         return $query->count();
+    }
+
+    /**
+     * Checks whether this record is the first in the list.
+     * @return bool whether this record is the first in the list.
+     * @since 1.0.1
+     */
+    public function getIsFirst()
+    {
+        return $this->owner->getAttribute($this->positionAttribute) == 1;
+    }
+
+    /**
+     * Checks whether this record is the the last in the list.
+     * Note: each invocation of this method causes a DB query execution.
+     * @return bool whether this record is the last in the list.
+     * @since 1.0.1
+     */
+    public function getIsLast()
+    {
+        $position = $this->owner->getAttribute($this->positionAttribute);
+        if ($position === null) {
+            return false;
+        }
+
+        return ($position >= $this->countGroupRecords());
+    }
+
+    /**
+     * Finds record previous to this one.
+     * @return BaseActiveRecord|static|null previous record, `null` - if not found.
+     * @since 1.0.1
+     */
+    public function findPrev()
+    {
+        if ($this->getIsFirst()) {
+            return null;
+        }
+
+        $position = $this->owner->getAttribute($this->positionAttribute);
+
+        $query = $this->owner->find();
+        if (!empty($this->groupAttributes)) {
+            $query->andWhere($this->createGroupConditionAttributes());
+        }
+        $query->andWhere([$this->positionAttribute => $position - 1]);
+
+        return $query->one();
+    }
+
+    /**
+     * Finds record next to this one.
+     * @return BaseActiveRecord|static|null next record, `null` - if not found.
+     * @since 1.0.1
+     */
+    public function findNext()
+    {
+        $position = $this->owner->getAttribute($this->positionAttribute);
+
+        $query = $this->owner->find();
+        if (!empty($this->groupAttributes)) {
+            $query->andWhere($this->createGroupConditionAttributes());
+        }
+        $query->andWhere([$this->positionAttribute => $position + 1]);
+
+        return $query->one();
+    }
+
+    /**
+     * Finds the first record in the list.
+     * If this record is the first one, method will return its self reference.
+     * @return BaseActiveRecord|static|null next record, `null` - if not found.
+     * @since 1.0.1
+     */
+    public function findFirst()
+    {
+        if ($this->getIsFirst()) {
+            return $this->owner;
+        }
+
+        $query = $this->owner->find();
+        if (!empty($this->groupAttributes)) {
+            $query->andWhere($this->createGroupConditionAttributes());
+        }
+        $query->andWhere([$this->positionAttribute => 1]);
+
+        return $query->one();
+    }
+
+    /**
+     * Finds the last record in the list.
+     * @return BaseActiveRecord|static|null next record, `null` - if not found.
+     * @since 1.0.1
+     */
+    public function findLast()
+    {
+        $query = $this->owner->find();
+        if (!empty($this->groupAttributes)) {
+            $query->andWhere($this->createGroupConditionAttributes());
+        }
+        $query->orderBy([$this->positionAttribute => SORT_DESC])
+            ->limit(1);
+
+        return $query->one();
     }
 
     // Events :

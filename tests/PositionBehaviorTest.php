@@ -174,4 +174,107 @@ class PositionBehaviorTest extends TestCase
 
         $this->assertListCorrect();
     }
+
+    /**
+     * @depends testMoveNext
+     */
+    public function testGetIsFirst()
+    {
+        /* @var $firstRecord Item|PositionBehavior */
+        /* @var $refreshedRecord Item|PositionBehavior */
+
+        $firstRecord = Item::findOne(['position' => 1]);
+        $this->assertTrue($firstRecord->getIsFirst());
+
+        $firstRecord->moveNext();
+        $this->assertFalse($firstRecord->getIsFirst());
+
+        $refreshedRecord = Item::findOne($firstRecord->id);
+        $this->assertFalse($refreshedRecord->getIsFirst());
+    }
+
+    /**
+     * @depends testMovePrev
+     */
+    public function testGetIsLast()
+    {
+        /* @var $lastRecord Item|PositionBehavior */
+        /* @var $refreshedRecord Item|PositionBehavior */
+
+        $lastRecord = Item::find()
+            ->orderBy(['position' => SORT_DESC])
+            ->limit(1)
+            ->one();
+        $this->assertTrue($lastRecord->getIsLast());
+
+        $lastRecord->movePrev();
+        $this->assertFalse($lastRecord->getIsLast());
+
+        $refreshedRecord = Item::findOne($lastRecord->id);
+        $this->assertFalse($refreshedRecord->getIsLast());
+    }
+
+    public function testFindNext()
+    {
+        /* @var $firstRecord Item|PositionBehavior */
+        /* @var $secondRecord Item|PositionBehavior */
+        /* @var $lastRecord Item|PositionBehavior */
+
+        $firstRecord = Item::findOne(['position' => 1]);
+
+        $secondRecord = $firstRecord->findNext();
+        $this->assertEquals(2, $secondRecord->position);
+
+        $lastRecord = Item::find()
+            ->orderBy(['position' => SORT_DESC])
+            ->limit(1)
+            ->one();
+
+        $this->assertNull($lastRecord->findNext());
+    }
+
+    public function testFindPrev()
+    {
+        /* @var $firstRecord Item|PositionBehavior */
+        /* @var $preLastRecord Item|PositionBehavior */
+        /* @var $lastRecord Item|PositionBehavior */
+
+        $lastRecord = Item::find()
+            ->orderBy(['position' => SORT_DESC])
+            ->limit(1)
+            ->one();
+
+        $preLastRecord = $lastRecord->findPrev();
+        $this->assertEquals($lastRecord->position - 1, $preLastRecord->position);
+
+        $firstRecord = Item::findOne(['position' => 1]);
+        $this->assertNull($firstRecord->findPrev());
+    }
+
+    public function testFindFirst()
+    {
+        /* @var $firstRecord Item|PositionBehavior */
+        /* @var $secondRecord Item|PositionBehavior */
+
+        $firstRecord = Item::findOne(['position' => 1]);
+        $this->assertSame($firstRecord, $firstRecord->findFirst());
+
+        $secondRecord = Item::findOne(['position' => 2]);
+        $this->assertEquals($firstRecord->id, $secondRecord->findFirst()->id);
+    }
+
+    public function testFindLast()
+    {
+        /* @var $lastRecord Item|PositionBehavior */
+        /* @var $secondRecord Item|PositionBehavior */
+
+        $lastRecord = Item::find()
+            ->orderBy(['position' => SORT_DESC])
+            ->limit(1)
+            ->one();
+        $this->assertSame($lastRecord->id, $lastRecord->findLast()->id);
+
+        $secondRecord = Item::findOne(['position' => 2]);
+        $this->assertEquals($lastRecord->id, $secondRecord->findLast()->id);
+    }
 }

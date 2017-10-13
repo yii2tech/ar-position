@@ -208,4 +208,123 @@ class PositionBehaviorGroupTest extends TestCase
 
         $this->assertListCorrect();
     }
+
+    /**
+     * @depends testMoveNext
+     */
+    public function testGetIsFirst()
+    {
+        /* @var $firstRecord GroupItem|PositionBehavior */
+        /* @var $refreshedRecord GroupItem|PositionBehavior */
+
+        $groupId = 2;
+
+        $firstRecord = GroupItem::findOne(['groupId' => $groupId, 'position' => 1]);
+        $this->assertTrue($firstRecord->getIsFirst());
+
+        $firstRecord->moveNext();
+        $this->assertFalse($firstRecord->getIsFirst());
+
+        $refreshedRecord = GroupItem::findOne($firstRecord->id);
+        $this->assertFalse($refreshedRecord->getIsFirst());
+    }
+
+    /**
+     * @depends testMovePrev
+     */
+    public function testGetIsLast()
+    {
+        /* @var $lastRecord GroupItem|PositionBehavior */
+        /* @var $refreshedRecord GroupItem|PositionBehavior */
+
+        $groupId = 2;
+
+        $lastRecord = GroupItem::find()
+            ->andWhere(['groupId' => $groupId])
+            ->orderBy(['position' => SORT_DESC])
+            ->limit(1)
+            ->one();
+        $this->assertTrue($lastRecord->getIsLast());
+
+        $lastRecord->movePrev();
+        $this->assertFalse($lastRecord->getIsLast());
+
+        $refreshedRecord = GroupItem::findOne($lastRecord->id);
+        $this->assertFalse($refreshedRecord->getIsLast());
+    }
+
+    public function testFindNext()
+    {
+        /* @var $firstRecord GroupItem|PositionBehavior */
+        /* @var $secondRecord GroupItem|PositionBehavior */
+        /* @var $lastRecord GroupItem|PositionBehavior */
+
+        $groupId = 2;
+
+        $firstRecord = GroupItem::findOne(['groupId' => $groupId, 'position' => 1]);
+
+        $secondRecord = $firstRecord->findNext();
+        $this->assertEquals(2, $secondRecord->position);
+
+        $lastRecord = GroupItem::find()
+            ->andWhere(['groupId' => $groupId])
+            ->orderBy(['position' => SORT_DESC])
+            ->limit(1)
+            ->one();
+
+        $this->assertNull($lastRecord->findNext());
+    }
+
+    public function testFindPrev()
+    {
+        /* @var $firstRecord GroupItem|PositionBehavior */
+        /* @var $preLastRecord GroupItem|PositionBehavior */
+        /* @var $lastRecord GroupItem|PositionBehavior */
+
+        $groupId = 2;
+
+        $lastRecord = GroupItem::find()
+            ->andWhere(['groupId' => $groupId])
+            ->orderBy(['position' => SORT_DESC])
+            ->limit(1)
+            ->one();
+
+        $preLastRecord = $lastRecord->findPrev();
+        $this->assertEquals($lastRecord->position - 1, $preLastRecord->position);
+
+        $firstRecord = GroupItem::findOne(['groupId' => $groupId, 'position' => 1]);
+        $this->assertNull($firstRecord->findPrev());
+    }
+
+    public function testFindFirst()
+    {
+        /* @var $firstRecord GroupItem|PositionBehavior */
+        /* @var $secondRecord GroupItem|PositionBehavior */
+
+        $groupId = 2;
+
+        $firstRecord = GroupItem::findOne(['groupId' => $groupId, 'position' => 1]);
+        $this->assertSame($firstRecord, $firstRecord->findFirst());
+
+        $secondRecord = GroupItem::findOne(['groupId' => $groupId, 'position' => 2]);
+        $this->assertEquals($firstRecord->id, $secondRecord->findFirst()->id);
+    }
+
+    public function testFindLast()
+    {
+        /* @var $lastRecord GroupItem|PositionBehavior */
+        /* @var $secondRecord GroupItem|PositionBehavior */
+
+        $groupId = 2;
+
+        $lastRecord = GroupItem::find()
+            ->andWhere(['groupId' => $groupId])
+            ->orderBy(['position' => SORT_DESC])
+            ->limit(1)
+            ->one();
+        $this->assertSame($lastRecord->id, $lastRecord->findLast()->id);
+
+        $secondRecord = GroupItem::findOne(['groupId' => $groupId, 'position' => 2]);
+        $this->assertEquals($lastRecord->id, $secondRecord->findLast()->id);
+    }
 }

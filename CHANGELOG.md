@@ -1,7 +1,7 @@
 Yii 2 ActiveRecord Position extension Change Log
 ================================================
 
-1.0.1 under development
+1.0.1, November 1, 2017
 -----------------------
 
 - Enh #6: Added methods for list navigation: `getIsFirst()`, `getIsLast()`, `findNext()`, `findPrev()`, `findFirst()`, `findLast()` (klimov-paul)

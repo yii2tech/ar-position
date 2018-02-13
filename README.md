@@ -74,7 +74,7 @@ foreach ($records as $record) {
 
 ## Position saving <span id="position-saving"></span>
 
-Being attached, behavior automatically fills up `positionAttribute` value fro the new record, placing it to the end
+Being attached, behavior automatically fills up `positionAttribute` value for the new record, placing it to the end
 of the list:
 
 ```php

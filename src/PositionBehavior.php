@@ -14,7 +14,7 @@ use yii\db\BaseActiveRecord;
 /**
  * PositionBehavior allows managing custom order for the records in the database.
  * Behavior uses the specific integer field of the database entity to set up position index.
- * Due to this the database entity, which the model refers to, must contain field [[positionAttribute]].
+ * Due to this the database entity, which the model refers to, must contain field {@see positionAttribute}.
  *
  * ```php
  * class Item extends ActiveRecord
@@ -439,7 +439,7 @@ class PositionBehavior extends Behavior
 
     /**
      * This event raises after owner inserted or updated.
-     * It applies previously set [[positionOnSave]].
+     * It applies previously set {@see positionOnSave}.
      * This event supports other functionality.
      * @param ModelEvent $event event instance.
      */

@@ -15,6 +15,7 @@ class PositionBehaviorTest extends TestCase
         $records = Item::find()
             ->orderBy(['position' => SORT_ASC])
             ->all();
+
         foreach ($records as $recordNumber => $record) {
             $this->assertEquals($record->position, $recordNumber + 1, 'List positions have been broken!');
         }
@@ -171,6 +172,23 @@ class PositionBehaviorTest extends TestCase
         $currentRecord->save();
 
         $this->assertEquals($currentRecord->position, $newPosition, 'While saving, position attribute value has been lost!');
+
+        $this->assertListCorrect();
+    }
+
+    /**
+     * @depends testMoveLast
+     */
+    public function testDelete()
+    {
+        /* @var $currentRecord Item|PositionBehavior */
+
+        $currentPosition = 3;
+        $currentRecord = Item::findOne(['position' => $currentPosition]);
+
+        $currentRecord->delete();
+
+        $this->assertEquals(4, Item::find()->count());
 
         $this->assertListCorrect();
     }

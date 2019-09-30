@@ -210,6 +210,24 @@ class PositionBehaviorGroupTest extends TestCase
     }
 
     /**
+     * @depends testMoveLast
+     */
+    public function testDelete()
+    {
+        /* @var $currentRecord GroupItem|PositionBehavior */
+
+        $groupId = 2;
+        $currentPosition = 3;
+        $currentRecord = GroupItem::findOne(['groupId' => $groupId, 'position' => $currentPosition]);
+
+        $currentRecord->delete();
+
+        $this->assertEquals(4, GroupItem::find()->where(['groupId' => $groupId])->count());
+
+        $this->assertListCorrect();
+    }
+
+    /**
      * @depends testMoveNext
      */
     public function testGetIsFirst()
